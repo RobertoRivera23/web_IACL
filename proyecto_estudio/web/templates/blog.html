@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+    <title>Blog</title>
+</head>
+<body>
+
+    <!-- Sección de Publicaciones Mejorada -->
+<section class="publicaciones-grid" aria-label="Últimas publicaciones">
+    <h2 class="section-heading text-center">Artículos de Interés</h2>
+   
+    {% for publicacion in publicaciones %}
+    <article class="publicacion-card">
+        <img src="{{ publicacion.imagen.url }}" 
+             alt="{{ publicacion.titulo }}" 
+             loading="lazy"
+             class="publicacion-imagen">
+        <div class="publicacion-content">
+            <h3><a href="{{ publicacion.enlace }}">{{ publicacion.titulo }}</a></h3>
+            <div class="categorias">
+                {% for categoria in publicacion.categorias.all %}
+                <span class="categoria-tag">{{ categoria.nombre }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+</body>
+{% endblock %}

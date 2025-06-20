@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+{% if messages %}
+    <div class="alert alert-danger">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
+<div class="client-dashboard">
+    <div class="container">
+        <h2 class="mb-4">Bienvenido, {{ cliente.usuario.first_name }}</h2>
+          <!-- Notificaciones -->
+          {% if notificaciones %}
+          <div class="card mb-4">
+              <h4>📬 Notificaciones</h4>
+              {% for notif in notificaciones %}
+              <div class="alert-notification">
+                  {{ notif.mensaje }}
+                  <small class="text-muted">{{ notif.fecha|date:"d/m/Y H:i" }}</small>
+              </div>
+              {% endfor %}
+          </div>
+          {% endif %}
+          
+           <!-- Listado de Servicios -->
+        <div class="card">
+            <h4 class="mb-3">Tus Servicios</h4>
+            {% for servicio in servicios %}
+            <div class="service-item mb-3">
+                <h5>{{ servicio.nombre }}</h5>
+                <p>{{ servicio.detalles }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="status-badge">{{ servicio.get_estado_display }}</span>
+                    <small>{{ servicio.fecha_contratacion }}</small>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Documentos Existentes-->
+<div class="paginacion">
+ 
+    {% if documentos %} 
+        {% if documento.id %}
+            <a href="{% url 'historial_documento' documento.id %}">Ver Historial</a>
+        {% else %}
+            (Historial no disponible)
+        {% endif %}
+        {% if documentos.has_previous %}
+            <a href="?page_docs={{ documentos.previous_page_number }}">&laquo; Anterior</a>
+        {% endif %}
+    
+        <span>Página {{ documentos.number }} de {{ documentos.paginator.num_pages }}</span>
+    
+        {% if documentos.has_next %}
+            <a href="?page_docs={{ documentos.next_page_number }}">Siguiente &raquo;</a>
+        {% endif %}
+    {% else %}
+    <p>No hay documentos disponibles.</p>
+    {% endif %}
+</div>
+
+
+          <!-- Documentos Requeridos -->
+          {% if documentos_pendientes %}
+          
+          <div class="card">
+              <h4>📄 Documentación Requerida</h4>
+              {% for doc in documentos_pendientes %}
+              <div class="documento-card">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                          <h5>{{ doc.get_tipo_display }}</h5>
+                          <p>{{ doc.descripcion }}</p>
+                          <small class="text-danger">Fecha límite: {{ doc.fecha_limite|date:"d/m/Y" }}</small>
+                      </div>
+                      <form method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <input type="hidden" name="doc_id" value="{{ doc.id }}">
+                          <div class="file-upload">
+                              <label class="upload-btn">
+                                  📤 Subir documento
+                                  <input type="file" name="archivo" required>
+                              </label>
+                          </div>
+                          <button type="submit" class="btn btn-primary mt-2">Enviar</button>
+                      </form>
+                  </div>
+                  {% if doc.archivo %}
+                  <div class="mt-2">
+                      <a href="{{ doc.archivo.url }}" target="_blank" class="text-success">
+                          ✅ Documento subido ({{ doc.archivo.name|slice:"20:" }}...)
+                      </a>
+                  </div>
+                  <div class="card">
+                    <h4>Progreso de Documentación</h4>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: {{ progreso }}%">
+                            <span class="progress-text">{{ progreso }}%</span>
+                        </div>
+                    </div>
+                    </div>
+                  {% endif %}
+              </div>
+              {% endfor %}
+          </div>
+          {% endif %}
+  
+        <!-- Resumen de Deuda -->
+        <div class="card">
+            <h4>Estado Financiero</h4>
+            <p class="text-muted">Deuda total: ${{ deuda_total }}</p>
+        </div>
+
+        <!-- Historial de Pagos -->
+        <div class="card">
+            <h4 class="mb-3">Historial de Pagos</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Método</th>
+                        <th>Referencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pago in pagos %}
+                    <tr>
+                        <td>{{ pago.fecha }}</td>
+                        <td>${{ pago.monto }}</td>
+                        <td>{{ pago.metodo }}</td>
+                        <td>{{ pago.referencia }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

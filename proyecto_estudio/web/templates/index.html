@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Banner  -->
+<section class="banner" aria-label="Carrusel principal">
+    <div class="banner-overlay"></div>
+        <div class="text-carousel owl-carousel">
+        {% for item in carousel_items %}
+        <div class="carousel-item">
+            <div class="carousel-content-wrapper">
+                <div class="carousel-text-container">
+                    <h1 class="text-center">{{ item.title }}</h1>
+                    <p class="text-center">{{ item.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %} 
+    </div>  
+    <div class="text-center">
+        {% if not user.is_authenticated %}
+                <a href="{% url 'contacto' %}" class="btn btn-primary" >Contáctanos</a>
+            {% endif %}
+    </div> 
+</section>
+
+<!-- Nosotros -->
+<section class="descripcion" id="nosotros" aria-label="Nuestros servicios">
+    <div class="container mt-3 d-flex align-items-center">
+       
+        <!-- Texto de la sección -->
+        <div class="texto-nosotros">
+            <h2 class="section-heading">Quiénes somos</h2>
+            <p class="section-description">
+                Somos un estudio jurídico comprometido con la excelencia y la defensa de los intereses de nuestros clientes. 
+                Con un equipo de abogados altamente especializados en diversas áreas del derecho, ofrecemos soluciones legales personalizadas, eficientes y transparentes. Nuestra misión es brindar asesoramiento integral, representación robusta y resultados concretos, siempre con un enfoque ético y cercano. 
+                Confíe en nosotros para proteger sus derechos y guiarlo en cada paso legal con profesionalismo y dedicación.
+            </p>
+        </div>
+         <!-- Contenedor de la imagen con degradado -->
+        <div class="contenedor-imagen">
+            <img src="{% static 'images/Sra_Justicia.jpg' %}" alt="Descripción de la imagen" class="">
+        </div>
+    </div>
+</section>
+
+<!-- Servicios -->
+<section class="servicios-section bg-light" id="nosotros" aria-label="Nuestros servicios">
+    <div class="container">
+        <div class="text-center">       
+        <h2 class="section-heading text-center" id="servicios">Nuestros Servicios</h2>
+        </div>    
+        <div class="columna-item row">
+            {% for servicio in servicios %}
+            <div class="servicio-item col">
+                <div class="card servicio-box">
+                    <img src="{{ servicio.imagen.url }}" 
+                         alt="{{ servicio.nombre }}" 
+                         loading="lazy"
+                         class="card-image">
+                    <div class="card-content">
+                        <h3>{{ servicio.nombre }}</h3>
+                        <hr class="divider"> <!-- Línea divisoria -->
+                        <p class="text-justify">{{ servicio.descripcion|truncatechars:100 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'contacto' %}" class="btn btn-primary">Contáctanos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contacto -->
+<section class="descripcion" id="contacto" aria-label="Contacto">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h1 class="text-center section-heading">Contacto</h1>
+                <p class="text-center section-description">Ponte en contacto con nosotros.</p>
+                
+                <!-- Mensajes de éxito/error -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="contacto_submit" value="1">
+                    
+                    <div class="mb-2">
+                        <label for="nombre" class="form-label section-description mb-2">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="email" class="form-label section-description mb-2">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="telefono" class="form-label section-description mb-2">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono">
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="mensaje" class="form-label section-description mb-2">Mensaje</label>
+                        <textarea class="form-control" id="mensaje" name="mensaje" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+                
+                <div class="container">
+                    <div class="text-center section-description">
+                    <br>
+                    <p>Teléfono: +549 11-2176-8580</p>
+                    <p>Email: info@estudiojuridico.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+<!-- Scripts Unificados -->
+<script>
+      
+document.addEventListener('DOMContentLoaded', function() {
+
+ 
+// JavaScript (Requiere jQuery y Owl Carousel)  animateOut: 'fadeOut',
+$(document).ready(function(){
+    $('.owl-carousel').owlCarousel({
+        items: 1,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        smartSpeed: 1000,
+        dots: false,
+        nav: true,
+        navText:  ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+    });
+    $('service_owl-carousel').owlCarousel({
+        items: 3,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        smartSpeed: 1000,
+        dots: false,
+        nav: true,
+        navText:  ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+    });
+    
+});
+});
+</script>
+{% endblock %}

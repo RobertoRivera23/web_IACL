@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+<head>
+    <title>Servicios</title>
+</head>
+<body>
+    <section class="servicios" aria-label="Nuestros servicios">
+        <div class="container">
+            <h2 class="section-heading">Nuestros Servicios</h2>
+            <p class="section-description">Detalle de los servicios que prestamos.</p>
+    
+            <div class="servicios-carousel owl-carousel">
+                {% for servicio in servicios %}
+                <div class="servicio-item">
+                    <div class="card">
+                        <img src="{% static servicio.imagen %}" 
+                             alt="{{ servicio.nombre }}" 
+                             loading="lazy"
+                             class="card-image">
+                        <div class="card-content">
+                            <h3>{{ servicio.nombre }}</h3>
+                            <p>{{ servicio.descripcion|truncatechars:100 }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'contacto' %}" class="btn btn-primary">Contáctanos</a>
+            </div>
+            <p>Derecho de Familia: Asesoramiento en divorcios, alimentos, tenencia, régimen de visitas y uniones convivenciales. Protegemos los derechos de su familia con empatía y profesionalismo.
+
+                Derecho Laboral: Defendemos sus derechos como trabajador o empleador. Liquidaciones, despidos, accidentes laborales y negociaciones colectivas.
+                
+                Sucesiones: Tramitamos herencias, testamentos y divisiones de bienes de manera ágil y transparente, respetando su voluntad y la ley.
+                
+                Derecho Comercial: Asesoramos en contratos, sociedades, concursos y quiebras, garantizando soluciones eficientes para su negocio.
+                
+                Gestoría: Gestionamos trámites administrativos, registrales y notariales con rapidez y precisión.
+                
+                Derecho Migratorio: Brindamos asesoría en visas, residencias, ciudadanías y regularizaciones migratorias, facilitando su proceso en el país.</p>
+        </div>
+    </section>
+</body>
+{% endblock %}

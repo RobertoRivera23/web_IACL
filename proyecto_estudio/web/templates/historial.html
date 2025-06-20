@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+{% if historial is empty %}
+  <h4>No posee documentos guardados.</h4>
+{% else %}
+  <ul class="lista-registros">
+    {% for registro in historial %}
+      <li class="registro-auditoria">
+        <div class="fecha">
+          <time datetime="{{ registro.fecha|date:'c' }}">
+            {{ registro.fecha|date:"d/m/Y H:i" }}
+          </time>
+        </div>
+        <div class="accion">
+          <strong>{{ registro.get_accion_display }}</strong>
+          {% if registro.detalle|default:{} %}
+            <ul>
+              {% for campo, valores in registro.detalle.items %}
+                <li>
+                  {{ campo|title }}: 
+                  {% if valores.de %}De {{ valores.de }}{% endif %}
+                  {% if valores.a %} a {{ valores.a }}{% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="usuario">Por: {{ registro.usuario.username }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container mt-4">
+<head>
+    <title>Sobre Nosotros</title>
+</head>
+<body>
+    <h1> Nuestro Equipo </h1>
+    <p>Somos los mejores, humildemente...</p>
+    {% for abogado in abogados %}
+    <div>
+        <h2>{{ abogado.nombre }}</h2>
+        <p>{{ abogado.especialidad }} </p>
+        <p>{{ abogado.descripcion }} </p>
+        <img src="{{ abogado.foto.url }}" alt="{{ abogado.nombre }}">
+    </div>
+    {% endfor %}
+</body>
+</div>
+{% endblock %}
