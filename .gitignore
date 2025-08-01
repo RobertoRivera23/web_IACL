@@ -13,6 +13,7 @@ venv
 *.user
 *.userosscache
 *.sln.docstates
+IC_La_Mutual_venv
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

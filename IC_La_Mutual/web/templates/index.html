@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Banner  -->
+<section class="banner" aria-label="Carrusel principal">
+    <div class="banner-overlay"></div>
+    <div class="text-carousel owl-carousel">
+        {% for item in carousel_items %}
+        <div class="carousel-item">
+            <div class="carousel-content-wrapper">
+                <div class="carousel-text-container">
+                    <h1 class="text-center">{{ item.title }}</h1>
+                    <p class="text-center">{{ item.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>  
+    
+    <!-- Indicadores circulares -->
+    <div class="carousel-indicators" id="carouselIndicators">
+        {% for item in carousel_items %}
+        <div class="carousel-indicator {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></div>
+        {% endfor %}
+    </div>
+    <div class="text-center contact-btn">
+        <a href="{% url 'contacto' %}" class="btn btn-primary">Contáctanos</a>
+    </div> 
+</section>
+
+<!-- Nosotros -->
+<section class="descripcion" id="nosotros" aria-label="Nuestros servicios">
+    <div class="container mt-3 d-flex align-items-center">
+       
+        <!-- Texto de la sección -->
+        <div class="texto-nosotros">
+            <h2 class="section-heading text-dark">Quiénes somos</h2>
+            <p class="section-description text-dark text-align: justify">
+             "Somos una institución que cree firmemente en el aprender haciendo.
+Nuestros programas de capacitación laboral combinan teoría aplicada, talleres prácticos y vínculos con el sector productivo.
+No te preparamos para un examen: te preparamos para tu primer día de trabajo.
+Ofrecemos cursos con rápida salida laboral, donde desarrollarás habilidades reales, ganarás confianza profesional y certificarás tus competencias."
+            </p>
+        </div>
+         <!-- Contenedor de la imagen con degradado -->
+        <div class="contenedor-imagen">
+            <img src="{% static 'images/Logo_Instituto.png' %}" alt="Descripción de la imagen" class="">
+        </div>
+    </div>
+</section>
+
+<!-- Servicios -->
+<section class="servicios-section bg-light" id="nosotros" aria-label="Nuestros Cursos">
+    <div class="container">
+        <div class="text-center">       
+            <h2 class="section-heading text-center text-dark" id="Cursos">Nuestros Cursos</h2>
+        </div>    
+        <div class="columna-item row">
+            {% for servicio in servicios %}
+            <div class="servicio-item col">
+                <div class="servicio-box card">
+                    <img src="{{ servicio.imagen.url }}" 
+                         alt="{{ servicio.nombre }}" 
+                         loading="lazy"
+                         class="card-image">
+                    <div class="card-content">
+                        <h3>{{ servicio.nombre }}</h3>
+                        <hr class="divider">
+                        <p class="text-justify">{{ servicio.descripcion|truncatechars:200 }}</p>
+                        <div class="link mt-3">
+                            <a href="#" class="btn btn-outline-primary">Ver detalles</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'contacto' %}" class="btn btn-primary">Contáctanos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contacto -->
+<section class="descripcion" id="contacto" aria-label="Contacto">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h1 class="text-center section-heading text-dark">Contacto</h1>
+                <p class="text-center section-description text-dark">Ponte en contacto con nosotros.</p>
+                
+                <!-- Mensajes de éxito/error -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-center" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="contacto_submit" value="1">
+                    
+                    <div class="mb-2">
+                        <label for="nombre" class="form-label section-description mb-2 text-dark">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="email" class="form-label section-description mb-2 text-dark">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="telefono" class="form-label section-description mb-2 text-dark">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono">
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="mensaje" class="form-label section-description mb-2 text-dark">Mensaje</label>
+                        <textarea class="form-control" id="mensaje" name="mensaje" rows="5" required></textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+                
+                <div class="container">
+                    <div class="text-center section-description text-dark">
+                    <br>
+                    <p>Teléfono: +549 11-5990-2188 / 11-6740-5637 / 11-3631-1931</p>
+                    <p>Email: info@ICLaMutualcom</p>
+                    <p>Dirección: Av. Rivadavia 2890, piso 12, (Once) CABA</p>
+                    </div>
+                    <div class="mt-5" style="height: 400px; border-radius: 10px; overflow: hidden;">
+                        <div id="map" style="height: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+
+<!-- Scripts Unificados -->
+<script>
+      
+document.addEventListener('DOMContentLoaded', function() {
+
+ 
+// JavaScript (Requiere jQuery y Owl Carousel)  animateOut: 'fadeOut',
+$(document).ready(function(){
+    $('.owl-carousel').owlCarousel({
+        items: 1,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        smartSpeed: 1000,
+        dots: false,
+        nav: true,
+        navText:  ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+    });
+    $('service_owl-carousel').owlCarousel({
+        items: 3,
+        loop: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        smartSpeed: 1000,
+        dots: false,
+        nav: true,
+        navText:  ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+    });
+
+    $('.next-btn').click(function() {
+            $('.text-carousel').trigger('next.owl.carousel');
+        });
+            
+        $('.prev-btn').click(function() {
+            $('.text-carousel').trigger('prev.owl.carousel');
+        });    
+});
+});
+</script>
+<!-- Google Maps API -->
+<script>
+    function initMap() {
+        // Coordenadas de Av. Rivadavia 2890 (Once)
+        const location = { lat: -34.6083, lng: -58.4109 };
+        
+        // Crear mapa
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 17,
+            center: location,
+            styles: [
+                {
+                    "featureType": "administrative",
+                    "stylers": [{"saturation": "-100"}]
+                },
+                {
+                    "featureType": "poi",
+                    "stylers": [{"saturation": -100}]
+                },
+                {
+                    "featureType": "road",
+                    "stylers": [{"saturation": "-100"}]
+                },
+                {
+                    "featureType": "transit",
+                    "stylers": [{"saturation": -100}]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry.fill",
+                    "stylers": [{"color": "#0099dd"}]
+                }
+            ]
+        });
+
+        // Marcador personalizado
+        new google.maps.Marker({
+            position: location,
+            map: map,
+            title: "ICLaMutual",
+            icon: {
+                url: "{% static 'images/marker.png' %}",
+                scaledSize: new google.maps.Size(50, 50)
+            }
+        });
+    }
+</script>
+
+<!-- Reemplaza TU_API_KEY con tu clave real -->
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap">
+    
+    const infowindow = new google.maps.InfoWindow({
+    content: "<h5>IACL</h5><p>Av. Rivadavia 2890, piso 12</p>"
+});
+
+marker.addListener('click', () => {
+    infowindow.open(map, marker);
+});
+</script>
+{% endblock %}
